@@ -2,24 +2,29 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour
 {
-    public float rotationAngle = 45f; // Max angle left/right
-    public float rotationSpeed = 2f;  // Speed of sweeping
-
-    private Quaternion startRotation;
-
-    void Start()
-    {
-        startRotation = transform.rotation;
-    }
+    public float rotationSpeed = 10f;
+    private float targetAngle = 0f;
+    private bool shouldRotate = false;
 
     void Update()
     {
-        float angle = Mathf.Sin(Time.time * rotationSpeed) * rotationAngle;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        if (shouldRotate)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
     }
 
-    public void Shoot()
+    public void MoveInDirection(float angle)
     {
-        Debug.Log("🔫 Pew! Shot at angle: " + transform.rotation.eulerAngles.z);
+        targetAngle = angle;
+        shouldRotate = true;
+        Debug.Log("🧭 Rotating to " + angle + "°");
+    }
+
+    public void StopMoving()
+    {
+        shouldRotate = false;
+        Debug.Log("⛔ Stop rotation");
     }
 }
