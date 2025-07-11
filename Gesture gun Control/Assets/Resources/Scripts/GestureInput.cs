@@ -6,6 +6,7 @@ using SimpleJSON;
 public class GestureInput : MonoBehaviour
 {
     public GunController gun;   // Assign your Gun parent in Inspector
+    public PlayerRotationController rotationController; // Assign in Inspector
 
     private string lastGesture = "";
 
@@ -15,63 +16,81 @@ public class GestureInput : MonoBehaviour
         {
             Debug.LogError("❗ GunController not assigned in GestureInput");
         }
+        if (rotationController == null)
+        {
+            Debug.LogError("❗ RotationController not assigned in GestureInput");
+        }
 
         StartCoroutine(CheckGesture());
     }
 
     IEnumerator CheckGesture()
+{
+    while (true)
     {
-        while (true)
+        UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
         {
-            UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
-            yield return www.SendWebRequest();
+            string response = www.downloadHandler.text;
+            var json = JSON.Parse(response);
 
-            if (www.result == UnityWebRequest.Result.Success)
+            if (json == null)
             {
-                string response = www.downloadHandler.text;
-                var json = JSON.Parse(response);
+                Debug.LogWarning("⚠️ Failed to parse JSON response");
+                continue;
+            }
 
-                if (json == null)
+            string gesture = json["gesture"];
+            float angle = json["angle"].AsFloat;
+
+            if (gesture != lastGesture)
+            {
+                Debug.Log("🖐 Gesture changed: " + gesture);
+                lastGesture = gesture;
+            }
+
+            if (gun != null)
+            {
+                if (gesture == "fire")
                 {
-                    Debug.LogWarning("⚠️ Failed to parse JSON response");
-                    continue;
+                    gun.Fire();
                 }
-
-                string gesture = json["gesture"];
-
-                if (gesture != lastGesture)
+                else if (gesture == "idle")
                 {
-                    Debug.Log("🖐 Gesture changed: " + gesture);
-                    lastGesture = gesture;
+                    gun.StopFiring();
                 }
-
-                if (gun != null)
+                else if (gesture == "reload")
                 {
-                    if (gesture == "fire")
-                    {
-                        gun.Fire();
-                    }
-                    else if (gesture == "idle")
-                    {
-                        gun.StopFiring();
-                    }
-                    else if (gesture == "reload")
-                    {
-                        gun.Reload();  // We'll add this method
-                    }
+                    gun.Reload();
+                }
+                else
+                {
+                    gun.StopFiring();
+                }
+            }
+
+            // ✅ Rotation: apply only when angle is strong
+            if (rotationController != null)
+            {
+                if (Mathf.Abs(angle) > 20f)
+                {
+                    if (angle > 0)
+                        rotationController.RotateRight();
                     else
-                    {
-                        // Optional: stop firing on unknown gestures
-                        gun.StopFiring();
-                    }
+                        rotationController.RotateLeft();
                 }
+                // else: do nothing, no rotation
             }
-            else
-            {
-                Debug.LogError("🚫 Request failed: " + www.error);
-            }
-
-            yield return new WaitForSeconds(0.1f);
         }
+        else
+        {
+            Debug.LogError("🚫 Request failed: " + www.error);
+        }
+
+        yield return new WaitForSeconds(0.1f);
     }
+}
+
 }
