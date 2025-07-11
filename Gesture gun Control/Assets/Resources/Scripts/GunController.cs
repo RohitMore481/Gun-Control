@@ -1,30 +1,22 @@
 using UnityEngine;
 
+
 public class GunController : MonoBehaviour
 {
-    public float rotationSpeed = 10f;
-    private float targetAngle = 0f;
-    private bool shouldRotate = false;
+    public FiringAnimator animator;
 
-    void Update()
+    public void Fire()
     {
-        if (shouldRotate)
-        {
-            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }
+        animator.StartFiring();
     }
 
-    public void MoveInDirection(float angle)
+    public void StopFiring()
     {
-        targetAngle = angle;
-        shouldRotate = true;
-        Debug.Log("🧭 Rotating to " + angle + "°");
+        animator.StopFiring();
     }
 
-    public void StopMoving()
+    public void Reload()
     {
-        shouldRotate = false;
-        Debug.Log("⛔ Stop rotation");
+        animator.PlayReload();
     }
 }

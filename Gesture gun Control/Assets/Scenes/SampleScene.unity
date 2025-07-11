@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 110926753}
   - component: {fileID: 110926754}
+  - component: {fileID: 110926755}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -207,6 +208,45 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &110926755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110926752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11d8b677b49a454fa982c21d1d5afb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireFrames:
+  - {fileID: 21300000, guid: 866da06b39a618749b8c27ffdad9952e, type: 3}
+  - {fileID: 21300000, guid: 2bcded1480182744c880c1ab563585b8, type: 3}
+  - {fileID: 21300000, guid: 1beeef257f2844348a9223653d831b23, type: 3}
+  reloadFrames:
+  - {fileID: 21300000, guid: 98fea94f53f77af438dbe4c1839d406e, type: 3}
+  - {fileID: 21300000, guid: 29100cb5a4e404f4aaf257085a07ccf1, type: 3}
+  - {fileID: 21300000, guid: 629a0ba2bfc988646a792d351fd7cb1b, type: 3}
+  - {fileID: 21300000, guid: 5ccc2e2a53f888648be00fb9e3cb3d52, type: 3}
+  - {fileID: 21300000, guid: 51afb5d2916eb4444ae24dc4aab906d1, type: 3}
+  - {fileID: 21300000, guid: 8fb9d98b1dfbde44586ea02965c0b21d, type: 3}
+  - {fileID: 21300000, guid: e7ca20adb9e39cf4189445209c939b55, type: 3}
+  - {fileID: 21300000, guid: 36abc5cc2189d904ea17566587c38617, type: 3}
+  - {fileID: 21300000, guid: 33d18cad093c0d2449ad99335e7ce0dd, type: 3}
+  - {fileID: 21300000, guid: acdc4fff87b492c4685ad6acd8843f01, type: 3}
+  - {fileID: 21300000, guid: 957381573b4ebd442bf43f7bffe358b3, type: 3}
+  - {fileID: 21300000, guid: 375f6ce90335fb34b93e98f69e213b52, type: 3}
+  - {fileID: 21300000, guid: dbda81b4272f8144c9b74193d3826a6a, type: 3}
+  - {fileID: 21300000, guid: 0b1ea936c6c85a14aabc3eed211ebe7f, type: 3}
+  - {fileID: 21300000, guid: 6f1fcff700ad1fd429a5c9b22adb9ef5, type: 3}
+  - {fileID: 21300000, guid: 03ce9aaec69e0b9499286613e79dd8b4, type: 3}
+  - {fileID: 21300000, guid: 83c0005f27271374a9bf0f902f5d3bc0, type: 3}
+  - {fileID: 21300000, guid: 7087fc32bdf61c5419918c3650dbb383, type: 3}
+  - {fileID: 21300000, guid: 380228a13ff5bfc478326753b3ba7120, type: 3}
+  - {fileID: 21300000, guid: 380228a13ff5bfc478326753b3ba7120, type: 3}
+  fireFrameRate: 0.1
+  reloadFrameRate: 0.05
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,7 +348,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1534207388}
-  - component: {fileID: 1534207389}
+  - component: {fileID: 1534207391}
   m_Layer: 0
   m_Name: GunPlayer
   m_TagString: Untagged
@@ -332,7 +372,7 @@ Transform:
   - {fileID: 110926753}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1534207389
+--- !u!114 &1534207391
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -344,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ca594a9a6a876c4b9435326bdf1bcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  animator: {fileID: 110926755}
 --- !u!1 &1884636575
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49737644bb798cf45929658013ff20a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gun: {fileID: 1534207389}
+  gun: {fileID: 1534207391}
 --- !u!4 &1884636577
 Transform:
   m_ObjectHideFlags: 0

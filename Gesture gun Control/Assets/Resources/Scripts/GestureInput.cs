@@ -5,53 +5,73 @@ using SimpleJSON;
 
 public class GestureInput : MonoBehaviour
 {
-    public GunController gun; // Drag your player here in Inspector
+    public GunController gun;   // Assign your Gun parent in Inspector
+
+    private string lastGesture = "";
 
     void Start()
     {
+        if (gun == null)
+        {
+            Debug.LogError("❗ GunController not assigned in GestureInput");
+        }
+
         StartCoroutine(CheckGesture());
     }
 
     IEnumerator CheckGesture()
-{
-    while (true)
     {
-        UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.Success)
+        while (true)
         {
-            string response = www.downloadHandler.text;
-            Debug.Log("📦 Raw Response: " + response);  // 🔍 Watch this in console
+            UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
+            yield return www.SendWebRequest();
 
-            var json = JSON.Parse(response);
-            if (json == null)
+            if (www.result == UnityWebRequest.Result.Success)
             {
-                Debug.LogError("❌ Failed to parse JSON");
-                yield break;
+                string response = www.downloadHandler.text;
+                var json = JSON.Parse(response);
+
+                if (json == null)
+                {
+                    Debug.LogWarning("⚠️ Failed to parse JSON response");
+                    continue;
+                }
+
+                string gesture = json["gesture"];
+
+                if (gesture != lastGesture)
+                {
+                    Debug.Log("🖐 Gesture changed: " + gesture);
+                    lastGesture = gesture;
+                }
+
+                if (gun != null)
+                {
+                    if (gesture == "fire")
+                    {
+                        gun.Fire();
+                    }
+                    else if (gesture == "idle")
+                    {
+                        gun.StopFiring();
+                    }
+                    else if (gesture == "reload")
+                    {
+                        gun.Reload();  // We'll add this method
+                    }
+                    else
+                    {
+                        // Optional: stop firing on unknown gestures
+                        gun.StopFiring();
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("🚫 Request failed: " + www.error);
             }
 
-            string gesture = json["gesture"];
-            float angle = json["angle"].AsFloat;
-
-            Debug.Log("🖐 Gesture: " + gesture + " | 📐 Angle: " + angle);
-
-            if (gesture == "pistol" && gun != null)
-            {
-                gun.MoveInDirection(angle);
-            }
-            else if (gun != null)
-            {
-                gun.StopMoving();
-            }
+            yield return new WaitForSeconds(0.1f);
         }
-        else
-        {
-            Debug.LogError("🚫 Request failed: " + www.error);
-        }
-
-        yield return new WaitForSeconds(0.1f);
     }
-}
-
 }
