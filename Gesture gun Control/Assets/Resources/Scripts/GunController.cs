@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 
+
 [System.Serializable]
 public class GunData
 {
@@ -9,8 +10,11 @@ public class GunData
     public Sprite[] fireFrames;
     public Sprite[] reloadFrames;
 
-    public int roundCapacity = 100; // Total bullets per round (varies by gun)
+    public int roundCapacity = 100;     // Max bullets per round
+    public Transform firePoint;         // Where bullets spawn from
+    public float bulletSpeed = 10f;     // Speed at which bullets travel
 }
+
 
 public class GunController : MonoBehaviour
 {
@@ -24,9 +28,12 @@ public class GunController : MonoBehaviour
     public FiringAnimator animator;
 
     [Header("Ammo System")]
-    public int currentBullets; // Bullets left in current round
-    public TextMeshProUGUI bulletText; // UI: "10 / 100"
-    public GameObject reloadText;      // UI: shows when bullets = 0
+    public int currentBullets;                   // Bullets left in current round
+    public TextMeshProUGUI bulletText;           // UI: "10 / 100"
+    public GameObject reloadText;                // UI: shows when bullets = 0
+
+    [Header("Bullet System")]
+    public GameObject bulletPrefab;              // Bullet prefab to spawn
 
     void Start()
     {
@@ -52,20 +59,36 @@ public class GunController : MonoBehaviour
     }
 
     public void Fire()
+{
+    if (currentBullets > 0)
     {
-        if (currentBullets > 0)
+        if (animator != null)
         {
-            animator?.StartFiring();
-            Debug.Log("🔫 Firing: " + currentGun.gunName);
+            animator.StartFiring();
+        }
 
-            currentBullets--;
-            UpdateBulletUI();
-        }
-        else
+        Debug.Log("🔫 Firing: " + currentGun.gunName);
+
+        // Spawn the bullet at firePoint position and facing direction
+        GameObject bullet = Instantiate(bulletPrefab, currentGun.firePoint.position, currentGun.firePoint.rotation); // ✅ correct
+
+
+        // Set bullet velocity in the direction firePoint is facing (green arrow)
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        if (rb != null)
         {
-            Debug.Log("❌ Out of bullets! Press reload.");
+            rb.velocity = currentGun.firePoint.up * currentGun.bulletSpeed;
         }
+
+        currentBullets--;
+        UpdateBulletUI();
     }
+    else
+    {
+        Debug.Log("❌ Out of bullets! Press reload.");
+    }
+}
+
 
     public void StopFiring()
     {
