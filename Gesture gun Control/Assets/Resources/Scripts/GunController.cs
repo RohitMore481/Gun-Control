@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 [System.Serializable]
 public class GunData
@@ -7,6 +8,8 @@ public class GunData
     public Sprite[] idleFrames;
     public Sprite[] fireFrames;
     public Sprite[] reloadFrames;
+
+    public int roundCapacity = 100; // Total bullets per round (varies by gun)
 }
 
 public class GunController : MonoBehaviour
@@ -20,6 +23,11 @@ public class GunController : MonoBehaviour
     [Header("Animation")]
     public FiringAnimator animator;
 
+    [Header("Ammo System")]
+    public int currentBullets; // Bullets left in current round
+    public TextMeshProUGUI bulletText; // UI: "10 / 100"
+    public GameObject reloadText;      // UI: shows when bullets = 0
+
     void Start()
     {
         if (guns.Length == 0)
@@ -29,43 +37,66 @@ public class GunController : MonoBehaviour
         }
 
         currentGun = guns[currentGunIndex];
+        currentBullets = currentGun.roundCapacity;
         ApplyCurrentGunFrames();
+        UpdateBulletUI();
+    }
+
+    void Update()
+    {
+        // For testing: press R to reload manually
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reload();
+        }
     }
 
     public void Fire()
     {
-        if (animator != null)
+        if (currentBullets > 0)
         {
-            animator.StartFiring();
+            animator?.StartFiring();
             Debug.Log("🔫 Firing: " + currentGun.gunName);
+
+            currentBullets--;
+            UpdateBulletUI();
+        }
+        else
+        {
+            Debug.Log("❌ Out of bullets! Press reload.");
         }
     }
 
     public void StopFiring()
     {
-        if (animator != null)
-        {
-            animator.StopFiring();
-        }
+        animator?.StopFiring();
     }
 
     public void Reload()
     {
-        if (animator != null)
+        if (currentBullets == currentGun.roundCapacity)
         {
-            animator.PlayReload();
+            Debug.Log("⛔ Round is already full.");
+            return;
         }
+
+        animator?.PlayReload();
+        currentBullets = currentGun.roundCapacity;
+        UpdateBulletUI();
+
+        Debug.Log("🔁 Reloaded to full: " + currentGun.roundCapacity);
     }
 
     public void TrySwitchGun(string leftGesture)
     {
-        // Switch gun only if gesture changed to "v"
         if (leftGesture == "v" && lastLeftGesture != "v")
         {
             currentGunIndex = (currentGunIndex + 1) % guns.Length;
             currentGun = guns[currentGunIndex];
 
             ApplyCurrentGunFrames();
+            currentBullets = currentGun.roundCapacity;
+            UpdateBulletUI();
 
             Debug.Log("🔁 Switched to: " + currentGun.gunName);
         }
@@ -75,14 +106,20 @@ public class GunController : MonoBehaviour
 
     private void ApplyCurrentGunFrames()
     {
-        if (animator != null)
-        {
-            animator.SetFrames(
-                currentGun.idleFrames,
-                currentGun.fireFrames,
-                currentGun.reloadFrames
-            );
-        }
+        animator?.SetFrames(
+            currentGun.idleFrames,
+            currentGun.fireFrames,
+            currentGun.reloadFrames
+        );
+    }
+
+    private void UpdateBulletUI()
+    {
+        if (bulletText != null)
+            bulletText.text = $"{currentBullets} / {currentGun.roundCapacity}";
+
+        if (reloadText != null)
+            reloadText.SetActive(currentBullets == 0);
     }
 
     public string GetCurrentGunName()
