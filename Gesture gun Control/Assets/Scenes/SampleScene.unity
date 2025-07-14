@@ -220,32 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d11d8b677b49a454fa982c21d1d5afb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireFrames:
-  - {fileID: 21300000, guid: 866da06b39a618749b8c27ffdad9952e, type: 3}
-  - {fileID: 21300000, guid: 2bcded1480182744c880c1ab563585b8, type: 3}
-  - {fileID: 21300000, guid: 1beeef257f2844348a9223653d831b23, type: 3}
-  reloadFrames:
-  - {fileID: 21300000, guid: 98fea94f53f77af438dbe4c1839d406e, type: 3}
-  - {fileID: 21300000, guid: 29100cb5a4e404f4aaf257085a07ccf1, type: 3}
-  - {fileID: 21300000, guid: 629a0ba2bfc988646a792d351fd7cb1b, type: 3}
-  - {fileID: 21300000, guid: 5ccc2e2a53f888648be00fb9e3cb3d52, type: 3}
-  - {fileID: 21300000, guid: 51afb5d2916eb4444ae24dc4aab906d1, type: 3}
-  - {fileID: 21300000, guid: 8fb9d98b1dfbde44586ea02965c0b21d, type: 3}
-  - {fileID: 21300000, guid: e7ca20adb9e39cf4189445209c939b55, type: 3}
-  - {fileID: 21300000, guid: 36abc5cc2189d904ea17566587c38617, type: 3}
-  - {fileID: 21300000, guid: 33d18cad093c0d2449ad99335e7ce0dd, type: 3}
-  - {fileID: 21300000, guid: acdc4fff87b492c4685ad6acd8843f01, type: 3}
-  - {fileID: 21300000, guid: 957381573b4ebd442bf43f7bffe358b3, type: 3}
-  - {fileID: 21300000, guid: 375f6ce90335fb34b93e98f69e213b52, type: 3}
-  - {fileID: 21300000, guid: dbda81b4272f8144c9b74193d3826a6a, type: 3}
-  - {fileID: 21300000, guid: 0b1ea936c6c85a14aabc3eed211ebe7f, type: 3}
-  - {fileID: 21300000, guid: 6f1fcff700ad1fd429a5c9b22adb9ef5, type: 3}
-  - {fileID: 21300000, guid: 03ce9aaec69e0b9499286613e79dd8b4, type: 3}
-  - {fileID: 21300000, guid: 83c0005f27271374a9bf0f902f5d3bc0, type: 3}
-  - {fileID: 21300000, guid: 7087fc32bdf61c5419918c3650dbb383, type: 3}
-  - {fileID: 21300000, guid: 380228a13ff5bfc478326753b3ba7120, type: 3}
-  - {fileID: 21300000, guid: 380228a13ff5bfc478326753b3ba7120, type: 3}
-  fireFrameRate: 0.1
+  idleFrameRate: 0.08
+  fireFrameRate: 0.15
   reloadFrameRate: 0.05
 --- !u!1 &519420028
 GameObject:
@@ -349,6 +325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1534207388}
   - component: {fileID: 1534207391}
+  - component: {fileID: 1534207392}
   m_Layer: 0
   m_Name: GunPlayer
   m_TagString: Untagged
@@ -384,7 +361,110 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ca594a9a6a876c4b9435326bdf1bcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guns:
+  - gunName: Rifle
+    idleFrames:
+    - {fileID: 21300000, guid: 96c35aeb468d4a547bc1478c11844645, type: 3}
+    - {fileID: 21300000, guid: f4c8825a21f20544490a8c1d0a042720, type: 3}
+    - {fileID: 21300000, guid: eaa6da18566e69e4f929a2d88adafc4a, type: 3}
+    - {fileID: 21300000, guid: eb07cda1958b8d244bb89fbd7614f0a0, type: 3}
+    - {fileID: 21300000, guid: 2e71cc680868f3e498683c2f0471def3, type: 3}
+    - {fileID: 21300000, guid: 9de76d5e87e4dd243abde1d2199e39fc, type: 3}
+    - {fileID: 21300000, guid: 56a30c8f1a9ccf0418266f4f70d5dca8, type: 3}
+    - {fileID: 21300000, guid: cfd56d81649cabf4d81aca768b06c418, type: 3}
+    - {fileID: 21300000, guid: fa75b2397d81aa844a138454c1a0c303, type: 3}
+    - {fileID: 21300000, guid: 08536d287e571614d8bbf8b423c79b95, type: 3}
+    - {fileID: 21300000, guid: 774f8c874590f314a9eeb2f411896dde, type: 3}
+    - {fileID: 21300000, guid: 1f08324834d030e46895a4fe08c6d7e3, type: 3}
+    - {fileID: 21300000, guid: c8af4105f8a415a4698581de9a2ef6ea, type: 3}
+    - {fileID: 21300000, guid: 42071f8628bb3f745b821581e88f2d09, type: 3}
+    - {fileID: 21300000, guid: 0455b42793217e445b4ad9e6e06f93a6, type: 3}
+    - {fileID: 21300000, guid: bf061ec305079bd4299879fa16dbba31, type: 3}
+    - {fileID: 21300000, guid: e8e6dd3624a3ea34e8b985c3647d0755, type: 3}
+    - {fileID: 21300000, guid: 3a9bdd0b6f3fd2447a5f7e6442e70b41, type: 3}
+    - {fileID: 21300000, guid: f56065c4d828fbc47a35cebef8ecc9a7, type: 3}
+    - {fileID: 21300000, guid: 97646a6498140164d81c5523c3d38142, type: 3}
+    fireFrames:
+    - {fileID: 21300000, guid: 866da06b39a618749b8c27ffdad9952e, type: 3}
+    - {fileID: 21300000, guid: 2bcded1480182744c880c1ab563585b8, type: 3}
+    - {fileID: 21300000, guid: 1beeef257f2844348a9223653d831b23, type: 3}
+    reloadFrames:
+    - {fileID: 21300000, guid: 98fea94f53f77af438dbe4c1839d406e, type: 3}
+    - {fileID: 21300000, guid: 29100cb5a4e404f4aaf257085a07ccf1, type: 3}
+    - {fileID: 21300000, guid: 629a0ba2bfc988646a792d351fd7cb1b, type: 3}
+    - {fileID: 21300000, guid: 5ccc2e2a53f888648be00fb9e3cb3d52, type: 3}
+    - {fileID: 21300000, guid: 51afb5d2916eb4444ae24dc4aab906d1, type: 3}
+    - {fileID: 21300000, guid: 8fb9d98b1dfbde44586ea02965c0b21d, type: 3}
+    - {fileID: 21300000, guid: e7ca20adb9e39cf4189445209c939b55, type: 3}
+    - {fileID: 21300000, guid: 36abc5cc2189d904ea17566587c38617, type: 3}
+    - {fileID: 21300000, guid: 33d18cad093c0d2449ad99335e7ce0dd, type: 3}
+    - {fileID: 21300000, guid: acdc4fff87b492c4685ad6acd8843f01, type: 3}
+    - {fileID: 21300000, guid: 957381573b4ebd442bf43f7bffe358b3, type: 3}
+    - {fileID: 21300000, guid: 375f6ce90335fb34b93e98f69e213b52, type: 3}
+    - {fileID: 21300000, guid: dbda81b4272f8144c9b74193d3826a6a, type: 3}
+    - {fileID: 21300000, guid: 0b1ea936c6c85a14aabc3eed211ebe7f, type: 3}
+    - {fileID: 21300000, guid: 6f1fcff700ad1fd429a5c9b22adb9ef5, type: 3}
+    - {fileID: 21300000, guid: 03ce9aaec69e0b9499286613e79dd8b4, type: 3}
+    - {fileID: 21300000, guid: 83c0005f27271374a9bf0f902f5d3bc0, type: 3}
+    - {fileID: 21300000, guid: 7087fc32bdf61c5419918c3650dbb383, type: 3}
+    - {fileID: 21300000, guid: 6fbd84f6eef884a43bf6a9498b675b87, type: 3}
+    - {fileID: 21300000, guid: 380228a13ff5bfc478326753b3ba7120, type: 3}
+  - gunName: Pistol
+    idleFrames:
+    - {fileID: 21300000, guid: f2046912e4f709144ba9e989121c22ac, type: 3}
+    - {fileID: 21300000, guid: 0e8f2461c4695564e8154f00426673be, type: 3}
+    - {fileID: 21300000, guid: e6c8aa3b83e63f4478f7adbc7d59c1be, type: 3}
+    - {fileID: 21300000, guid: 738ef356cbbfeb54b946d50c8ae5897a, type: 3}
+    - {fileID: 21300000, guid: 1751cfb9612ef5246aed44be1b622ea2, type: 3}
+    - {fileID: 21300000, guid: a72fbcb563a4fce4a9b9262b525fdcd0, type: 3}
+    - {fileID: 21300000, guid: ab8aea9a7770aff4e92f1d0ebd44d4ab, type: 3}
+    - {fileID: 21300000, guid: c30cfb2f81df84947a707bd3f6fe9118, type: 3}
+    - {fileID: 21300000, guid: cea45c980743a6e479de62f72e96413f, type: 3}
+    - {fileID: 21300000, guid: 2c99721e63177b84db4a9d9f71d4850e, type: 3}
+    - {fileID: 21300000, guid: d5e70a7590b16a14ba45990dfb2e75b0, type: 3}
+    - {fileID: 21300000, guid: edb49fd38dab5d147ba4ba109e12e76c, type: 3}
+    - {fileID: 21300000, guid: 6db5aa90f4736af48a22850da11826c4, type: 3}
+    - {fileID: 21300000, guid: d92b6fe7070887f4bb713dd7a1354f7f, type: 3}
+    - {fileID: 21300000, guid: 4b82f2ff734f09b4085e50785743dc33, type: 3}
+    - {fileID: 21300000, guid: 11bdfbbfb06df6142a17a087ade0f5e9, type: 3}
+    - {fileID: 21300000, guid: 6005138b281c67f46b0eeb849bb4242c, type: 3}
+    - {fileID: 21300000, guid: 982937247fcf59f49b7a8b78f0183de9, type: 3}
+    - {fileID: 21300000, guid: cdfc66d05577a9d43be2122e0a9c21bd, type: 3}
+    - {fileID: 21300000, guid: eefa5786ea74cff43bb3ba22ff38e919, type: 3}
+    fireFrames:
+    - {fileID: 21300000, guid: aa1a489a8779bcf47a9256829e51ef35, type: 3}
+    - {fileID: 21300000, guid: bda756b6acc295341ab572be2cf9b09a, type: 3}
+    - {fileID: 21300000, guid: 1568f373898ef0f49bdfaa036b72d97c, type: 3}
+    reloadFrames:
+    - {fileID: 21300000, guid: 9ec49b349bb98e44692cf8a367bf822e, type: 3}
+    - {fileID: 21300000, guid: 0f57ffee22abe6344bb16a0cb2aa90c6, type: 3}
+    - {fileID: 21300000, guid: e2713f40db140a6408bf70c795415336, type: 3}
+    - {fileID: 21300000, guid: 748afb65ba5e6634cbe7e5d675f37f37, type: 3}
+    - {fileID: 21300000, guid: 6d24d3622d477ba43b042ade1a6190d0, type: 3}
+    - {fileID: 21300000, guid: ad7a9d7d8a7de8a47a3e64d35f502410, type: 3}
+    - {fileID: 21300000, guid: d8ecdfadd1fffe647bbe6fbf2e1b1090, type: 3}
+    - {fileID: 21300000, guid: 77d8b5c88136cd04c8280bcb20fb371c, type: 3}
+    - {fileID: 21300000, guid: f627bbbc248459f4d9ca8e9ce2e72e3e, type: 3}
+    - {fileID: 21300000, guid: 8563a3f80ce0cbe4180ee71d5c5fb417, type: 3}
+    - {fileID: 21300000, guid: e086d553445e510489675eddabdac130, type: 3}
+    - {fileID: 21300000, guid: 295c2d8e8b496cb4b83e451f7a095eda, type: 3}
+    - {fileID: 21300000, guid: 08cc8843c9854714289f1af53cabb3f1, type: 3}
+    - {fileID: 21300000, guid: 0a877eb3f8bde4e4e8477ca35ae9ec42, type: 3}
+    - {fileID: 21300000, guid: 4da8f50d0cf148c4db36ccb5aef1463a, type: 3}
   animator: {fileID: 110926755}
+--- !u!114 &1534207392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534207387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4468e37982022544bcf090f43b40f07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 1000
 --- !u!1 &1884636575
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 1534207391}
+  rotationController: {fileID: 1534207392}
 --- !u!4 &1884636577
 Transform:
   m_ObjectHideFlags: 0

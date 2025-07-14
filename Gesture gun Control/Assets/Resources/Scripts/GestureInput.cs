@@ -5,7 +5,7 @@ using SimpleJSON;
 
 public class GestureInput : MonoBehaviour
 {
-    public GunController gun;   // Assign your Gun parent in Inspector
+    public GunController gun;   // Assign in Inspector
     public PlayerRotationController rotationController; // Assign in Inspector
 
     private string lastGesture = "";
@@ -25,72 +25,65 @@ public class GestureInput : MonoBehaviour
     }
 
     IEnumerator CheckGesture()
-{
-    while (true)
     {
-        UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.Success)
+        while (true)
         {
-            string response = www.downloadHandler.text;
-            var json = JSON.Parse(response);
+            UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:5000/gesture");
+            yield return www.SendWebRequest();
 
-            if (json == null)
+            if (www.result == UnityWebRequest.Result.Success)
             {
-                Debug.LogWarning("⚠️ Failed to parse JSON response");
-                continue;
-            }
+                string response = www.downloadHandler.text;
+                var json = JSON.Parse(response);
 
-            string gesture = json["gesture"];
-            float angle = json["angle"].AsFloat;
+                if (json == null || !json.HasKey("gesture") || !json.HasKey("angle") || !json.HasKey("left_gesture"))
+                {
+                    Debug.LogWarning("⚠️ Invalid JSON response or missing keys.");
+                    continue;
+                }
 
-            if (gesture != lastGesture)
-            {
-                Debug.Log("🖐 Gesture changed: " + gesture);
-                lastGesture = gesture;
-            }
+                string gesture = json["gesture"];          // Right hand
+                string leftGesture = json["left_gesture"]; // Left hand
+                float angle = json["angle"].AsFloat;
 
-            if (gun != null)
-            {
-                if (gesture == "fire")
+                // 🔄 Only log if right-hand gesture changed
+                if (gesture != lastGesture)
                 {
-                    gun.Fire();
+                    Debug.Log("🖐 Gesture changed: " + gesture);
+                    lastGesture = gesture;
                 }
-                else if (gesture == "idle")
-                {
-                    gun.StopFiring();
-                }
-                else if (gesture == "reload")
-                {
-                    gun.Reload();
-                }
-                else
-                {
-                    gun.StopFiring();
-                }
-            }
 
-            // ✅ Rotation: apply only when angle is strong
-            if (rotationController != null)
-            {
-                if (Mathf.Abs(angle) > 20f)
+                // 🔫 Gun controls
+                if (gun != null)
                 {
-                    if (angle > 0)
-                        rotationController.RotateRight();
+                    if (gesture == "fire")
+                        gun.Fire();
+                    else if (gesture == "reload")
+                        gun.Reload();
                     else
-                        rotationController.RotateLeft();
+                        gun.StopFiring();
+
+                    gun.TrySwitchGun(leftGesture); // ✌️ V gesture = switch weapon
                 }
-                // else: do nothing, no rotation
+
+                // ↪️ Rotation control
+                if (rotationController != null)
+                {
+                    if (Mathf.Abs(angle) > 20f)
+                    {
+                        if (angle > 0)
+                            rotationController.RotateRight();
+                        else
+                            rotationController.RotateLeft();
+                    }
+                }
             }
-        }
-        else
-        {
-            Debug.LogError("🚫 Request failed: " + www.error);
-        }
+            else
+            {
+                Debug.LogError("🚫 Request failed: " + www.error);
+            }
 
-        yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.1f);
+        }
     }
-}
-
 }

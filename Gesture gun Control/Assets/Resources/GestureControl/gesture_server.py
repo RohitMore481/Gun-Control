@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 import cv2
 import mediapipe as mp
-import math
 import threading
 
 app = Flask(__name__)
@@ -10,11 +9,13 @@ hands = mp.solutions.hands.Hands(min_detection_confidence=0.7,
                                   min_tracking_confidence=0.7,
                                   max_num_hands=2)
 
-gesture = "none"
-angle = 0
+gesture = "none"         # right hand gesture
+angle = 0                # for rotation
+left_gesture = "none"    # left hand gesture (e.g., "v")
+
 
 def detect_gesture():
-    global gesture, angle
+    global gesture, angle, left_gesture
 
     while True:
         success, frame = cap.read()
@@ -25,8 +26,10 @@ def detect_gesture():
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = hands.process(rgb)
 
+        # Reset each frame
         gesture = "none"
         angle = 0
+        left_gesture = "none"
 
         if results.multi_hand_landmarks and results.multi_handedness:
             for i, hand_landmarks in enumerate(results.multi_hand_landmarks):
@@ -34,7 +37,7 @@ def detect_gesture():
                 lm = hand_landmarks.landmark
                 h, w, _ = frame.shape
 
-                # Right hand – Gesture detection
+                # ✋ Right hand – fire/reload/idle
                 if hand_label == "Right":
                     index_tip_y = lm[8].y
                     index_joint_y = lm[6].y
@@ -55,14 +58,24 @@ def detect_gesture():
                     else:
                         gesture = "none"
 
-                # Left hand – Rotation control using thumb position
+                # 🤚 Left hand – angle + "v" detection
                 elif hand_label == "Left":
                     fingers_extended = 0
-                    for fid in [8, 12, 16, 20]:  # index to pinky tips
+                    extended_fingers = []
+
+                    for fid in [8, 12, 16, 20]:  # index to pinky
                         if lm[fid].y < lm[fid - 2].y:
                             fingers_extended += 1
+                            extended_fingers.append(fid)
 
-                    if fingers_extended <= 1:  # fingers folded
+                    # ✌️ "V" gesture check: index + middle only
+                    if 8 in extended_fingers and 12 in extended_fingers and len(extended_fingers) == 2:
+                        left_gesture = "v"
+                    else:
+                        left_gesture = "none"
+
+                    # 🧭 Thumb position for rotation
+                    if fingers_extended <= 1:
                         thumb_diff = lm[4].x - lm[0].x  # thumb.x - wrist.x
 
                         if abs(thumb_diff) < 0.03:
@@ -72,36 +85,35 @@ def detect_gesture():
                         else:
                             angle = -90  # Left
 
-                        # Debug line
+                        # Visual debug
                         wrist_px = (int(lm[0].x * w), int(lm[0].y * h))
                         thumb_px = (int(lm[4].x * w), int(lm[4].y * h))
                         cv2.line(frame, wrist_px, thumb_px, (255, 255, 0), 2)
 
-                        cv2.putText(frame, f"Thumb-X: {thumb_diff:.2f}", (10, 100),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-
-                # Draw landmarks
-                mp.solutions.drawing_utils.draw_landmarks(
-                    frame, hand_landmarks, mp.solutions.hands.HAND_CONNECTIONS)
-
-        # Debug HUD
+        # 🧪 Debug text
         cv2.putText(frame, f"Gesture: {gesture}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         cv2.putText(frame, f"Angle: {int(angle)}", (10, 70),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 0), 2)
+        cv2.putText(frame, f"Left Gesture: {left_gesture}", (10, 110),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
 
         cv2.imshow("Gesture Debug", frame)
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             cap.release()
             cv2.destroyAllWindows()
             break
 
+
 @app.route('/gesture')
 def get_gesture():
     return jsonify({
         "gesture": gesture,
-        "angle": angle
+        "angle": angle,
+        "left_gesture": left_gesture
     })
+
 
 if __name__ == '__main__':
     threading.Thread(target=detect_gesture, daemon=True).start()
